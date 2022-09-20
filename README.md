@@ -15,6 +15,6 @@ This is the R code for paper **Randomized Phase II Selection Design with Order C
         + This code contains code for simulation and case studies.
   
 2. **fig folder**
-    * This part contains the figures in the paper
+    * This part contains the figures in the paper.
     
 
