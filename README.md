@@ -2,7 +2,7 @@
 This is the R code for paper **Randomized Phase II Selection Design with Order Constrained Strata**
 
 
-**Details of the shared code and figures:**
+**Details of the folders:**
 
 1. **code folder** 
     * function.R
