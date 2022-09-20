@@ -16,14 +16,12 @@ QP<-function(p0,r,n){
     A_lower[i,i:(i+1)]<-c(-1,1)
   }
   Amat<-rbind(A_upper,A_lower)
-  # Amat <- A_lower
   Amat<-t(Amat)
-  # b_vec<-c(p0,numeric(S-1))
   b_vec<-c(numeric(S-1+length(p0)))
   
   solve.QP(Dmat,dvec,Amat,b_vec)}
 
-
+## proposed idea
 pickwin_strat_sargent<- function(n, p1, strata_diff,
                                  D1=0.15, D2=0.15,d1=0.05,d2=0.05, prop.strat=0.3)
 {

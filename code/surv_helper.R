@@ -4,6 +4,7 @@ library(dplyr)
 library(Hmisc)
 RNGkind( "L'Ecuyer-CMRG")
 set.seed(123678)
+## set up for accrual
 x=3
 arrival_rate <- 1
 FUP <- 3
@@ -79,7 +80,7 @@ llkhd <- function(qq,nrisk,nevent,event_time,event_ind){
 
 
 
-
+## simulation of survival times
 sim_surv <- function(nmax,arrival_rate,event_rate,FUP){
   
   wait.t = rexp(nmax,rate = arrival_rate)
@@ -196,7 +197,7 @@ sim_contr_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
 
 
 
-
+## original idea
 sim_km_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
                        trt_diff1,trt_diff2,d_diff1,d_diff2){
   corr <- 0
