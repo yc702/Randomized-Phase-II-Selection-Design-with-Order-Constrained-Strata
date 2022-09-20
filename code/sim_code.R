@@ -426,6 +426,8 @@ rho = c(0,0.5)
 prop=0.3
 contr_result <- NULL
 km_result <- NULL
+## surv_helper_case.R has the same function as surv_helper.R
+## except changing the accrual setting
 source("surv_helper_case.R")
 
 
