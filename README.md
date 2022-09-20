@@ -5,10 +5,10 @@ This is the R code for paper **Randomized Phase II Selection Design with Order C
 **Details of the folders:**
 
 1. **code folder** 
-    * function.R
+    * bin_helper.R
         + This code contains the key functions estimating E-constrained MLE for binomial outcome.
 
-    * helper.R
+    * surv_helper.R
         + This code contains the key functions estimating E-constrained MLE for survival outcome.
         
     * sim_code.R
