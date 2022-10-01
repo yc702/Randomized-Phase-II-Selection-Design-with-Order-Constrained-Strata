@@ -71,7 +71,7 @@ ggplot(plot_data, aes(x=n, y=Lambda, group=interaction(Group,d1),color = Group,l
   scale_x_continuous("Sample size")+
   geom_line()+ylab(expression(paste(lambda)))+
   scale_linetype_discrete(name = expression(paste(theta)))+
-  geom_point()
+  geom_point()+ theme(text = element_text(size = 15)) 
 
 save(output_old,output_new,file = "sim1.RData")
 
@@ -91,17 +91,17 @@ output_new2 <- NULL
 
 for (i in 1:length(p1)){
   result <- pickwin_original(n=n, p1=p1[i], strata_diff=strata_diff,  
-                                  D1=D1, D2=D2,d1=d1, d2=d2,prop.strat=prop)
+                             D1=D1, D2=D2,d1=d1, d2=d2,prop.strat=prop)
   output_old2 <- rbind(output_old2,c(result$pcorr,result$pamb,n,p1[i],strata_diff,
                                      D1,D2,d1,d2,prop))
   
 }
 
 for (i in 1:length(p1)){
-    result <- pickwin_strat_sargent(n=n, p1=p1[i], strata_diff=strata_diff,  
-                                   D1=D1, D2=D2,d1=d1, d2=d2,prop.strat=prop)
-    output_new2 <- rbind(output_new2,c(result$pcorr,result$pamb,n,p1[i],strata_diff,
-                                       D1,D2,d1,d2,prop))
+  result <- pickwin_strat_sargent(n=n, p1=p1[i], strata_diff=strata_diff,  
+                                  D1=D1, D2=D2,d1=d1, d2=d2,prop.strat=prop)
+  output_new2 <- rbind(output_new2,c(result$pcorr,result$pamb,n,p1[i],strata_diff,
+                                     D1,D2,d1,d2,prop))
   
 }
 
@@ -133,7 +133,7 @@ ggplot(plot_data, aes(x=pi_b, y=Lambda, group=Group,color = Group))+theme_classi
              labeller = label_parsed)+
   scale_x_continuous(expression(pi[b1]))+
   geom_line()+ylab(expression(paste(lambda)))+
-  geom_point()
+  geom_point()+ theme(text = element_text(size = 15)) 
 
 save(output_old2,output_new2,file = "sim2.RData")
 
@@ -151,9 +151,10 @@ trt_diff2 <- 0.08
 d_diff1 <- c(0.02,0.05)
 d_diff2 <- c(0.02,0.05)
 rho = c(0,0.5)
-prop=0.5
+prop=0.4
 contr_result <- NULL
 km_result <- NULL
+
 
 cl <- makeCluster(6)
 registerDoParallel(cl)
@@ -163,7 +164,7 @@ contr_combo <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
   start.p <- foreach(i=1:length(maxn),.combine = 'rbind')%:%
     foreach(j=1:length(d_diff1),.combine = 'rbind') %dopar% {
       source("surv_helper.R")
-     
+      
       result <- sim_contr_fun(maxn[i],prop,event_rate_A2,strata_diff1,strata_diff2,
                               trt_diff1,trt_diff2,d_diff1[j],d_diff2[j])
       pcorr <- result[1]
@@ -208,12 +209,12 @@ km_result <- km_combo(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
 
 
 
-
 sim_data <- rbind(contr_result,km_result)
 sim_data <- sim_data %>% data.frame() %>%
   mutate(Group=c(rep("Contr",nrow(km_result)),rep("KM",nrow(km_result))))
 names(sim_data) <- c("Pcorr","Pamb","n","prop","event rate A2","strata diff1", "strata diff2",
                      "trt diff1","trt diff2","d diff1","d diff2","Group")
+# sim_data$Lambda <- (sim_data$Pamb+sim_data$Pcorr)/5000
 sim_data$Pcorr <- sim_data$Pcorr/5000
 sim_data$Pamb <- sim_data$Pamb/5000
 
@@ -240,7 +241,7 @@ ggplot(plot_data, aes(x=n, y=Lambda, group=interaction(Group,d1),color = Group,l
   scale_x_continuous("Sample size")+
   geom_line()+ylab(expression(paste(lambda)))+
   scale_linetype_discrete(name = expression(paste(theta)))+
-  geom_point()
+  geom_point()+ theme(text = element_text(size = 15)) 
 
 save(sim_data,file="sim_surv1.RData")
 
@@ -259,7 +260,6 @@ d_diff2 <- 0.05
 rho = c(0,0.5)
 output_old <- NULL
 output_new <- NULL
-## x=3
 
 cl <- makeCluster(6)
 registerDoParallel(cl)
@@ -267,16 +267,16 @@ contr_combo <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
                         trt_diff1,trt_diff2,d_diff1,d_diff2){
   result <- NULL
   start.p <- foreach(i=1:length(event_rate_A2),.combine = 'rbind') %dopar% {
-      source("surv_helper.R")
-      result <- sim_contr_fun(maxn,prop,event_rate_A2[i],strata_diff1,strata_diff2,
-                              trt_diff1,trt_diff2,d_diff1,d_diff2)
-      pcorr <- result[1]
-      pamb <- result[2]
-      
-      c(pcorr,pamb,maxn,prop,event_rate_A2[i],strata_diff1,strata_diff2,
-        trt_diff1,trt_diff2,d_diff1,d_diff2)
-      
-    }
+    source("surv_helper.R")
+    result <- sim_contr_fun(maxn,prop,event_rate_A2[i],strata_diff1,strata_diff2,
+                            trt_diff1,trt_diff2,d_diff1,d_diff2)
+    pcorr <- result[1]
+    pamb <- result[2]
+    
+    c(pcorr,pamb,maxn,prop,event_rate_A2[i],strata_diff1,strata_diff2,
+      trt_diff1,trt_diff2,d_diff1,d_diff2)
+    
+  }
   return(start.p)
   on.exit(stopCluster(cl))
 }
@@ -334,9 +334,9 @@ plot_data$rho <- factor(plot_data$rho, levels = c("0","0.5"),
 ggplot(plot_data, aes(x=h_a, y=Lambda, group=Group,color = Group))+theme_classic() + 
   facet_wrap(~rho,
              labeller = label_parsed)+ylab(expression(paste(lambda)))+
-  scale_x_continuous(expression(h[a2]))+
+  scale_x_continuous(expression(h[a2]),breaks=seq(0.03,0.13,0.02))+
   geom_line()+
-  geom_point()
+  geom_point()+ theme(text = element_text(size = 15)) 
 
 save(sim_data,file = "sim_surv2.RData")
 
@@ -356,7 +356,7 @@ prop <- 0.7
 rho = c(0,0.5)
 output_old <- NULL
 output_new <- NULL
-source("bin_helper.R")
+source("bin_function.R")
 
 
 for (i in 1:length(n)){
@@ -407,9 +407,9 @@ ggplot(plot_data, aes(x=n, y=Lambda, group=Group,color = Group))+theme_classic()
   scale_x_continuous("Sample size")+
   geom_line()+ylab(expression(paste(lambda)))+
   scale_linetype_discrete(name = expression(paste(theta)))+
-  geom_point()+ 
+  geom_point()+ theme(text = element_text(size = 15)) + 
   geom_hline(yintercept=0.8, linetype="dashed", 
-                           color = "grey", size=0.5)
+             color = "grey", size=0.5)
 save(output_old2,output_new2,file="case_bin.RData")
 
 ## survival case
@@ -428,7 +428,6 @@ contr_result <- NULL
 km_result <- NULL
 ## surv_helper_case.R has the same function as surv_helper.R
 ## except changing the accrual setting
-source("surv_helper_case.R")
 
 
 cl <- makeCluster(6)
@@ -488,7 +487,7 @@ km_result <- km_combo(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
 sim_data <- rbind(contr_result,km_result)
 sim_data <- sim_data %>% data.frame() %>%
   mutate(Group=c(rep("Contr",nrow(km_result)),rep("KM",nrow(km_result))))
-names(sim_data) <- c("Pcorr","Pamb","n","prop","event rate A1","strata diff1", "strata diff2",
+names(sim_data) <- c("Pcorr","Pamb","n","prop","event rate A2","strata diff1", "strata diff2",
                      "trt diff1","trt diff2","d diff1","d diff2","Group")
 sim_data$Pcorr <- sim_data$Pcorr/5000
 sim_data$Pamb <- sim_data$Pamb/5000
@@ -516,7 +515,7 @@ ggplot(plot_data, aes(x=n, y=Lambda, group=Group,color = Group))+theme_classic()
   scale_x_continuous("Sample size")+
   geom_line()+ylab(expression(paste(lambda)))+
   scale_linetype_discrete(name = expression(paste(theta)))+
-  geom_point()+ 
+  geom_point()+ theme(text = element_text(size = 15)) + 
   geom_hline(yintercept=0.8, linetype="dashed", 
              color = "grey", size=0.5)
 save(sim_data,file = "case_surv.RData")
