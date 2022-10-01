@@ -109,7 +109,7 @@ sim_contr_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
   err <- 0
   n1<- ceiling(prop*maxn)
   n2<- maxn-n1  
-
+  
   # ## Assume only have two groups:
   ## helper function
   for(sim in 1:5000){
@@ -197,7 +197,7 @@ sim_contr_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
 
 
 
-## original idea
+
 sim_km_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
                        trt_diff1,trt_diff2,d_diff1,d_diff2){
   corr <- 0
@@ -236,8 +236,8 @@ sim_km_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
         S_A1 <- summary(fit1,t=x)$surv
       }
     }
-     
-  
+    
+    
     if(length(time_2)==0){
       S_A2 <- 1
     } else{
