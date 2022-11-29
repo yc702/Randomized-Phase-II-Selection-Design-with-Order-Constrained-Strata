@@ -13,6 +13,12 @@ This is the R code for paper **Randomized Phase II Selection Design with Order C
         
     * sim_code.R
         + This code contains code for simulation and case studies.
+        
+    * sim_table.R
+        + This code contains code for simulation tables.
+    
+    * helper_table.R
+        + This code contains the key functions for simulation table parallel computaion.
   
 2. **fig folder**
     * This part contains the figures in the paper.
