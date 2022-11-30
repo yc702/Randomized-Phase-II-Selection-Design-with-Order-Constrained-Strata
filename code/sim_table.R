@@ -23,7 +23,7 @@ d2 <- 0.05
 n_old1 <- NULL
 n_new1 <- NULL
 
-## explore different proportion, p1 seq
+## explore different p1 seq
 cl <- makeCluster(6)
 registerDoParallel(cl)
 contr_combo <- function(n, p1_seq, strata_diff,
@@ -134,7 +134,7 @@ n_new1 <- NULL
 nstart = c(15,27,27,27,16)
 source("helper_table.R")
 
-
+## constrained survival
 output <- NULL
 result <- NULL
 for(i in 1:length(event_rate_A2_seq)){
