@@ -9,16 +9,16 @@ This is the R code for paper **Randomized Phase II Selection Design with Order C
         + This code contains the key functions estimating E-constrained MLE for binomial outcome.
 
     * surv_helper.R
-        + This code contains the key functions estimating E-constrained MLE for survival outcome.
+        + This code contains the key functions estimating E-constrained NPMLE for survival outcome.
         
     * sim_code.R
         + This code contains code for simulation and case studies.
-        
-    * sim_table.R
-        + This code contains code for simulation tables.
     
-    * helper_table.R
-        + This code contains the key functions for simulation table parallel computaion.
+    * surv_likelihood.R
+        + This code contains helper functions for constrained NPMLE pointwise survival estimation.
+    
+    * sim_table_helper.R
+        + This code contains the helper functions for simulation table parallel computation.
   
 2. **fig folder**
     * This part contains the figures in the paper.
