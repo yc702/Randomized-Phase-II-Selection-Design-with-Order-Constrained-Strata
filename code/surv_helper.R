@@ -5,6 +5,7 @@ library(Hmisc)
 RNGkind( "L'Ecuyer-CMRG")
 set.seed(123678)
 
+## load helper functions for constrained survival
 source("surv_likelihood.R")
 
 sim_contr_fun <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,

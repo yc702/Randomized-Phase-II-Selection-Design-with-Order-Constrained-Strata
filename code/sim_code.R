@@ -7,8 +7,10 @@ library(foreach)
 library(doParallel)
 set.seed(123678)
 options(digits=10)
+RNGkind("L'Ecuyer-CMRG") # the random generator to set parallel seed
 
-## new simulation result 1
+
+## binary simulation result 
 n <- c(20,30,40,50,60,70)
 p1 <- 0.35
 strata_diff <- 0.1
@@ -52,6 +54,7 @@ output_old$Lambda_05 <- output_old$Pcorr + 0.5*output_old$Pamb
 output_new$Lambda_0 <- output_new$Pcorr
 output_new$Lambda_05 <- output_new$Pcorr + 0.5*output_new$Pamb
 
+## create plot
 plot_data <- data.frame(n = c(output_old$n,output_old$n,output_new$n,output_new$n),
                         Lambda = c(output_old$Lambda_0,output_old$Lambda_05,output_new$Lambda_0,output_new$Lambda_05),
                         rho = c(rep(rho,each=length(n)*2),rep(rho,each=length(n)*2)),
@@ -79,7 +82,7 @@ save(output_old,output_new,file = "sim1.RData")
 
 
 ### simulation for survival
-## new simulation result 1
+##  simulation result 
 
 maxn <- c(20,30,40,50,60,70)
 event_rate_A2 <- -log(0.85)/3
@@ -103,9 +106,9 @@ contr_combo <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
     foreach(j=1:length(d_diff1),.combine = 'rbind') %dopar% {
       source("surv_helper.R")
       ## set up for accrual
-      x=3
-      arrival_rate <- 1
-      FUP = 3
+      x=6
+      arrival_rate <- 4
+      FUP = 6
       result <- sim_contr_fun(maxn[i],prop,event_rate_A2,strata_diff1,strata_diff2,
                               trt_diff1,trt_diff2,d_diff1[j],d_diff2[j])
       pcorr <- result[1]
@@ -131,7 +134,11 @@ km_combo <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
   result <- NULL
   start.p <- foreach(i=1:length(maxn),.combine = 'rbind')%:%
     foreach(j=1:length(d_diff1),.combine = 'rbind') %dopar% {
-      source("helper.R")
+      source("surv_helper.R")
+      ## set up for accrual
+      x=6
+      arrival_rate <- 4
+      FUP = 6
       result <- sim_km_fun(maxn[i],prop,event_rate_A2,strata_diff1,strata_diff2,
                            trt_diff1,trt_diff2,d_diff1[j],d_diff2[j])
       pcorr <- result[1]
@@ -163,6 +170,7 @@ sim_data$Pamb <- sim_data$Pamb/5000
 sim_data$Lambda_0 <- sim_data$Pcorr 
 sim_data$Lambda_05 <- sim_data$Pcorr + 0.5*sim_data$Pamb
 
+## create plot
 plot_data <- data.frame(n = c(sim_data$n,sim_data$n),
                         Lambda = c(sim_data$Lambda_0,sim_data$Lambda_05),
                         rho = c(rep(rho,each=length(sim_data$n))),
@@ -193,7 +201,6 @@ save(sim_data,file="sim_surv1.RData")
 
 ## case study:
 ## binary case
-## new simulation result 1
 n <- c(20,25,30,35,40,45,50)
 p1 <- 0.4
 strata_diff <- 0.1
@@ -205,7 +212,7 @@ prop <- 0.7
 rho = c(0,0.5)
 output_old <- NULL
 output_new <- NULL
-source("bin_function.R")
+source("bin_helper.R")
 
 
 for (i in 1:length(n)){
@@ -237,6 +244,7 @@ output_old$Lambda_05 <- output_old$Pcorr + 0.5*output_old$Pamb
 output_new$Lambda_0 <- output_new$Pcorr
 output_new$Lambda_05 <- output_new$Pcorr + 0.5*output_new$Pamb
 
+## create plot
 plot_data <- data.frame(n = c(output_old$n,output_old$n,output_new$n,output_new$n),
                         Lambda = c(output_old$Lambda_0,output_old$Lambda_05,output_new$Lambda_0,output_new$Lambda_05),
                         rho = c(rep(rho,each=length(n)),rep(rho,each=length(n))),
@@ -262,7 +270,7 @@ ggplot(plot_data, aes(x=n, y=Lambda, group=Group,color = Group))+theme_classic()
 save(output_old2,output_new2,file="case_bin.RData")
 
 ## survival case
-## new simulation result 1
+## simulation result 
 maxn <- c(20,25,30,35,40,45)
 event_rate_A2 <- -log(0.85)/2
 strata_diff1 <- log(0.85)/2-log(0.75)/2
@@ -275,7 +283,6 @@ rho = c(0,0.5)
 prop=0.3
 contr_result <- NULL
 km_result <- NULL
-## changing the accrual setting
 
 
 cl <- makeCluster(6)
@@ -315,7 +322,10 @@ km_combo <- function(maxn,prop,event_rate_A2,strata_diff1,strata_diff2,
   result <- NULL
   start.p <- foreach(i=1:length(maxn),.combine = 'rbind')%:%
     foreach(j=1:length(d_diff1),.combine = 'rbind') %dopar% {
-      source("surv_helper_case.R")
+      source("surv_helper.R")
+      x=2
+      arrival_rate <- 8
+      FUP <- 2
       result <- sim_km_fun(maxn[i],prop,event_rate_A2,strata_diff1,strata_diff2,
                            trt_diff1,trt_diff2,d_diff1[j],d_diff2[j])
       pcorr <- result[1]
@@ -346,6 +356,7 @@ sim_data$Pamb <- sim_data$Pamb/5000
 sim_data$Lambda_0 <- sim_data$Pcorr 
 sim_data$Lambda_05 <- sim_data$Pcorr + 0.5*sim_data$Pamb
 
+## create plot
 plot_data <- data.frame(n = c(sim_data$n,sim_data$n),
                         Lambda = c(sim_data$Lambda_0,sim_data$Lambda_05),
                         rho = c(rep(rho,each=length(sim_data$n))),
@@ -373,9 +384,6 @@ save(sim_data,file = "case_surv.RData")
 
 
 
-RNGkind("L'Ecuyer-CMRG") # the random generator to set parallel seed
-set.seed(1236789)
-options(digits=10)
 
 ### Simulation table 
 ## Binary
@@ -397,7 +405,6 @@ contr_combo <- function(n, p1_seq, strata_diff,
   start.p <- foreach(i=1:length(p1_seq),.combine = 'rbind')%:%
     foreach(j=1:length(prop_seq),.combine = 'rbind') %dopar% {
       source("bin_helper.R")
-      
       n <- nstart
       lambda <- 0
       while (lambda<sigma){

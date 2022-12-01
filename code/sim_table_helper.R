@@ -12,8 +12,7 @@ source("surv_likelihood.R")
 
 sim_contr_fun <- function(j){
 
-  # ## Assume only have two groups:
-  ## helper function
+  ## Assume only have two groups:
 
     trtA_1 <- sim_surv(n1,arrival_rate,event_rate=event_rate_A2+strata_diff1,FUP)
     trtA_2 <- sim_surv(n2,arrival_rate,event_rate=event_rate_A2,FUP)
